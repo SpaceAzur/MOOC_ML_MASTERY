@@ -29,3 +29,11 @@ print(description)
 # Class distribution
 class_counts = data.groupby(['class','age']).size()
 print(class_counts)
+
+# calcul du coefficient de correlation entre attributs
+correlation = data.corr(method='pearson')
+print(correlation)
+
+# calcul de l'inclinaison gaussienne des attributs
+skew = data.skew()
+print("\nskew \n",skew)
