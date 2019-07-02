@@ -104,6 +104,7 @@ titre = []
 for col in dt.columns:
     titre.append(col)
 
+print(titre)
 # recuperation des données csv avec pandas et header
 df = pandas.read_csv('BostonHouse.csv', header=1, index_col=False, names=titre)
 
@@ -111,18 +112,18 @@ df = pandas.read_csv('BostonHouse.csv', header=1, index_col=False, names=titre)
 
 # 1. THE MEAN ABSOLUTE ERROR (somme des differences absolue entre prediction et valeur exacte)
 
-# filename2 = 'BostonHouse.csv'
-# names2 = ['CRIM', 'ZN', 'INDUS', 'CHAS', 'NOX', 'RM', 'AGE', 'DIS', 'RAD', 'TAX', 'PTRATIO','B', 'LSTAT', 'MEDV']
+filename2 = 'BostonHouse.csv'
+names2 = ['CRIM', 'ZN', 'INDUS', 'CHAS', 'NOX', 'RM', 'AGE', 'DIS', 'RAD', 'TAX', 'PTRATIO','B', 'LSTAT', 'MEDV']
 
-# dataframe2 = read_csv(filename2, delim_whitespace=True, names=names2)
-# array2 = df.values
-# X2 = array2[:,0:13]
-# Y2 = array2[:,13]
-# kfold4 = KFold(n_splits=10, random_state=7)
-# model6 = LinearRegression()
-# scoring3 = 'neg_mean_absolute_error'
-# results4 = cross_val_score(model6, X2, Y2, cv=kfold4, scoring=scoring3)
-# print("1. MAE : %.3f (%.3f)" % (results4.mean(), results4.std()))
+dataframe2 = read_csv(filename2, delim_whitespace=True, names=names2)
+array2 = df.values
+X2 = array2[:,0:13]
+Y2 = array2[:,13]
+kfold4 = KFold(n_splits=10, random_state=7)
+model6 = LinearRegression()
+scoring3 = 'neg_mean_absolute_error'
+results4 = cross_val_score(model6, X2, Y2, cv=kfold4, scoring=scoring3)
+print("1. MAE : %.3f (%.3f)" % (results4.mean(), results4.std()))
 
 #-----------------------------------------------------------------------------------
 # 2. MEAN SQARE ERROR (la flème)
