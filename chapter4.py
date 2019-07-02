@@ -30,6 +30,9 @@ print("avec numpy ",data2.shape)
 # METHODE 3 - avec pandas - directos depuis l'URL
 data3 = read_csv(url, header=None, index_col=False)
 print("avec pandas ",data3.shape)
+names = ['preg', 'plas', 'pres', 'skin', 'test', 'mass', 'pedi', 'age', 'class']
+
+
 
 
 
