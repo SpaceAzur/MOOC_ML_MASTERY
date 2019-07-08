@@ -92,4 +92,69 @@ ax.set_xticklabels(names)
 ax.set_yticklabels(names)
 pyplot.show()
 
-# reprendre p.118 chapitre 19.5.1
+# séparer les data en un jeu d'entrainement, et un autre jeu de validation pour plus tard
+
+array = dataset.values
+X = array[:,0:4] #ne prend pas en compte la dernière colonne [5] 
+Y = array[:,4]
+validation_size = 0.20
+seed = 7
+X_train, X_validation, Y_train, Y_validation = train_test_split(X, Y, 
+                                test_size=validation_size, random_state=seed)
+
+print("X_train :",len(X_train), "\nX_validation :",len(X_validation))
+# harnais de test 
+#   nous allons eclater nos données en 10 sous parties (10 folders) 
+#   le modele va s'entrainer sur 9 d'entre elles et tester sur le dernier folder 
+#   Il va itérer cette opération sur toutes les combinaisons de folder existantes
+
+# construire les modeles 
+#   nous allons faire cela sur plusieurs modeles (6) afin de choisir lequel est le plus performant/pertinent
+#   avec le même traitement des données (folder) pour chaque model, afin de les rendre comparable
+
+models =[]
+models.append(('LogisticRegression', LogisticRegression(solver='liblinear', multi_class='ovr')))
+models.append(('LinearDiscriminantAnalysis', LinearDiscriminantAnalysis()))
+models.append(('+ProcheVoisins', KNeighborsClassifier()))
+models.append(('ArbreDecision', DecisionTreeClassifier()))
+models.append(('NaiveBayes', GaussianNB()))
+models.append(('VecteurDeSupport', SVC(gamma='auto')))
+
+# on évalue chaque modele
+results = []
+names = []
+ 
+for name, model in models:
+    kfold = KFold(n_splits=10, random_state=seed)
+    cv_results = cross_val_score(model, X_train, Y_train, cv=kfold, scoring='accuracy')
+    results.append(cv_results)
+    names.append(name)
+    msg = "%s: %f (%f)" % (name,cv_results.mean(), cv_results.std())
+    print(msg)
+        # Resultats /                      Précision | Variance
+            # LogisticRegression:           0.966667  (0.040825)
+            # LinearDiscriminantAnalysis:   0.975000  (0.038188)
+            # +ProcheVoisins:               0.983333  (0.033333)
+            # ArbreDecision:                0.975000  (0.038188)
+            # NaiveBayes:                   0.975000  (0.053359)
+            # VecteurDeSupport:             0.991667  (0.025000)
+
+# Comparer les algo ==> schéma representatif
+
+fig = pyplot.figure()
+fig.suptitle("Comparaison d'algorithtmes")
+ax = fig.add_subplot(111)
+pyplot.boxplot(results)
+ax.set_xticklabels(names)
+pyplot.show()
+
+# faire des prédictions sur le jeu de données de validation
+svc = SVC(gamma='auto')
+svc.fit(X_train, Y_train)
+predictions = svc.predict(X_validation)
+print("\naccuracy :\n", accuracy_score(Y_validation, predictions))
+print("\nmatrice de confusion :\n", confusion_matrix(Y_validation, predictions))
+print("\nrapport de classification :\n", classification_report(Y_validation, predictions))
+
+
+
